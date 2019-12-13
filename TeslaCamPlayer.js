@@ -43,9 +43,8 @@ vidF.addEventListener('error', function () {
 
 document.querySelector('.next').addEventListener('click', playNextMedia)
 function playNextMedia() {
-  if (currentClipIndex < files.length / 4 - 1) {
+  if (currentClipIndex < clips.length - 1) {
     currentClipIndex++
-    //clipName = clipNames[currentClipIndex]
     loadClip(currentClipIndex)
     playPauseMedia()
   }
@@ -54,7 +53,6 @@ function playNextMedia() {
 document.querySelector('.prior').addEventListener('click', function () {
   if (currentClipIndex > 0) {
     currentClipIndex--
-    //clipName = clipNames[currentClipIndex]
     loadClip(currentClipIndex)
     playPauseMedia()
   }
