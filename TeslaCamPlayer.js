@@ -5,6 +5,7 @@ let vidA = document.querySelectorAll('video')
   , vidL = $('#vidL')
   , vidF = document.querySelector('#vidF')
   , vidR = document.querySelector('#vidR')
+  , vidB = document.querySelector('#vidB') 
   , play = document.querySelector('.play')
   , rwd = document.querySelector('.rwd')
   , fwd = document.querySelector('.fwd')
@@ -53,12 +54,13 @@ function loadClipX(clipName) {
 
 function loadClip(i) {
   console.log('loadclip2: ', i)
-  clipName = files[i].name.substr(0, 16)
+  clipName = files[i*4].name.substr(0, 16)
   document.querySelector('#currentFile').innerHTML = clipName
 
-  vidL.src = URL.createObjectURL(files[i * 3  + 1])
-  vidF.src = URL.createObjectURL(files[i * 3])
-  vidR.src = URL.createObjectURL(files[i * 3 + 2])
+  vidL.src = URL.createObjectURL(files[i * 4  + 1])
+  vidF.src = URL.createObjectURL(files[i * 4])
+  vidR.src = URL.createObjectURL(files[i * 4 + 2])
+  vidB.src = URL.createObjectURL(files[i * 4 + 3])
 }
 
 vidF.addEventListener('ended', function () {
@@ -71,17 +73,21 @@ vidF.addEventListener('error', function () {
 
 document.querySelector('.next').addEventListener('click', playNextMedia)
 function playNextMedia() {
-  if (currentClipIndex < files.length / 3 - 2) currentClipIndex++
-  //clipName = clipNames[currentClipIndex]
-  loadClip(currentClipIndex)
-  playPauseMedia()
+  if (currentClipIndex < files.length / 4 - 1) {
+    currentClipIndex++
+    //clipName = clipNames[currentClipIndex]
+    loadClip(currentClipIndex)
+    playPauseMedia()
+  }
 }
 
 document.querySelector('.prior').addEventListener('click', function () {
-  if (currentClipIndex > 0) currentClipIndex--
-  //clipName = clipNames[currentClipIndex]
-  loadClip(currentClipIndex)
-  playPauseMedia()
+  if (currentClipIndex > 0) {
+    currentClipIndex--
+    //clipName = clipNames[currentClipIndex]
+    loadClip(currentClipIndex)
+    playPauseMedia()
+  }
 })
 
 play.addEventListener('click', playPauseMedia)
@@ -145,9 +151,7 @@ function windBackward() {
 
 function windForward() {
   if (vidF.currentTime >= vidF.duration - skipTime) {
-    fwd.classList.remove('active')
-    clearInterval(intervalFwd)
-    stopMedia()
+	playNextMedia()
   } else vidA.forEach(v => v.currentTime += skipTime)
 }
 
