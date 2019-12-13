@@ -187,4 +187,3 @@ document.getElementById("files").addEventListener("change", function (event) {
   loadClip(0)
 
 }, false)
-
