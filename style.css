@@ -121,5 +121,4 @@ video { border: 1px solid rgba(0, 0, 0, 0.925); width: 33% }
 }
 .page-title{ grid-area:title; margin:0; text-align: center }
 .main-content{ grid-area:main }
-.footer{background: darkgray; grid-area:footer}
-  
+.footer{background: darkgray; grid-area:footer; position:absolute; bottom:0; left:0; width:100%}
