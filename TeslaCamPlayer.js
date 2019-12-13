@@ -14,53 +14,23 @@ let vidA = document.querySelectorAll('video')
   , currentClipIndex = 0
   , intervalFwd, intervalRwd
   , skipInterval = 200, skipTime = 3
-  //, clipNames = []
+  , clips = []
   , files = []
-//localStorage.getItem('clipNames')
-/*
-chrome.storage.local.get('clipNames', function (result) {
-  console.log('chrome storage: ', result)
-  if(result) clipNames = JSON.parse(result.clipNames)
-})
-
-chrome.storage.local.get('files', function (result) {
-  console.log('chrome storage: ', result)
-  if(result) files = JSON.parse(result)
-})
-
-chrome.storage.local.get('ClipPath', function (result) {
-  console.log('chrome storage ClipPath: ', result.ClipPath)
-  tbClipPath.value = result.ClipPath
-})
-
-//tbClipPath.value = chrome.localStorage.getItem('ClipPath')
-tbClipPath.addEventListener('change', function () {
-  console.log('tbClipPath', tbClipPath.value)
-  //localStorage.setItem('ClipPath', tbClipPath.value)
-  chrome.storage.local.set({'ClipPath': tbClipPath.value})
-})
-
-if (clipNames !== null && clipNames.length > 0) loadClip(clipNames[0])
-
-function loadClipX(clipName) {
-  let clipPath =  'file:///' + tbClipPath.value + '/' 
-  document.querySelector('#currentFile').innerHTML = clipName
-  console.log('loadclip: ', clipPath + clipName)
-  vidL.src = clipPath + clipName + '-left_repeater.mp4'
-  vidF.src = clipPath + clipName + '-front.mp4'
-  vidR.src = clipPath + clipName + '-right_repeater.mp4'
-}
-*/
 
 function loadClip(i) {
   console.log('loadclip2: ', i)
-  clipName = files[i*4].name.substr(0, 16)
+  clipName = clips[i]
   document.querySelector('#currentFile').innerHTML = clipName
+  clipFiles = files.filter((file) => { return file.name.substring(0,16) == clipName } )
+  clipL = clipFiles.filter((file) => { return file.name.indexOf("left_repeater") > 0 } )
+  clipF = clipFiles.filter((file) => { return file.name.indexOf("front") > 0 } )
+  clipR = clipFiles.filter((file) => { return file.name.indexOf("right_repeater") > 0 } )
+  clipB = clipFiles.filter((file) => { return file.name.indexOf("back") > 0 } )
 
-  vidL.src = URL.createObjectURL(files[i * 4  + 1])
-  vidF.src = URL.createObjectURL(files[i * 4])
-  vidR.src = URL.createObjectURL(files[i * 4 + 2])
-  vidB.src = URL.createObjectURL(files[i * 4 + 3])
+  vidL.src = (clipL.length)?URL.createObjectURL(clipL[0]):""
+  vidF.src = (clipF.length)?URL.createObjectURL(clipF[0]):""
+  vidR.src = (clipR.length)?URL.createObjectURL(clipR[0]):""
+  vidB.src = (clipB.length)?URL.createObjectURL(clipB[0]):""
 }
 
 vidF.addEventListener('ended', function () {
@@ -174,19 +144,12 @@ slider.addEventListener('input', function () {
 })
 
 document.getElementById("files").addEventListener("change", function (event) {
-  files = event.target.files
-  console.log(files)
-  /*
-  clipNames = []
-  for (let i = 0; i < files.length; i++)
-    if (files[i].name.endsWith('-front.mp4')){
-     clipNames.push(files[i].name.substr(0, 16))
-    }
-  */
-  //localStorage.setItem('clipNames', JSON.stringify(clipNames))
-  //chrome.storage.local.set({'clipNames': JSON.stringify(clipNames)})
-  //chrome.storage.local.set({'files': JSON.stringify(files)})
-  //clipNames = clipNames.sort()
+  files = Array.from(event.target.files)
+  
+  //console.log(files)
+  
+  clips = Array.from(new Set(files.map((file) => { return file.name.substring(0,16) })))
+  
   currentClipIndex = 0
   loadClip(0)
 
