@@ -147,7 +147,7 @@ document.getElementById("files").addEventListener("change", function (event) {
   //console.log(files)
   
   clips = Array.from(new Set(files.map((file) => { return file.name.substring(0,16) })))
-  
+  clips.sort()
   currentClipIndex = 0
   loadClip(0)
 
